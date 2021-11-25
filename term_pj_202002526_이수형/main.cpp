@@ -197,14 +197,14 @@ public:
 				}
 				s = "";
 				cstk.push(num);
-				return j - 1;
+				return j - 1;//리턴 한 후 Calc함수 내의 i는 이 리턴값이 된다, 즉 16진수형식이 끝난 상태에서 시작한다.
 			}
 		}
 	}
 	int biconv(vector<char> vec, int i) {//2진수를 10진수로 변환시켜준다. 끝난 후 끝났을때의 vec위치인덱스를 리턴해서 기존 Calc함수에서 달라진 i로 진행한다
 		int num = 0;
 
-		for (int j = i + 1; j < vec.size(); j++) {
+		for (int j = i + 1; j < vec.size(); j++) {//원래 진행하던 index를 계속 진행한다
 			if (vec[j] == '0' || vec[j] == '1') {
 				s += vec[j];
 			}
@@ -218,7 +218,7 @@ public:
 				}
 				s = "";
 				cstk.push(num);
-				return j - 1;
+				return j - 1;//16진수쪽 함수의 리턴값의 역할이랑 같다.
 			}
 		}
 	}
@@ -247,7 +247,7 @@ public:
 					s = "";
 				}
 				else {
-					if (s != "") {
+					if (s != "") {//숫자가 끝난거니 묶어놨던 것을 스택에 push한다.
 						cstk.push(stoi(s));
 						s = "";
 					}
