@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class Calculator {//result를 공통적으로 쓰기 위해 만들었다.
+class Calculator {//model과 result를 여러 클래스에서 쓰기 위해 만들었다.
 	protected:
 	public:
 		stack<int> cstk;
@@ -223,7 +223,6 @@ public:
 		}
 	}
 	int Calc(vector<char> vec) {//계산하는 함수
-		try {
 			string s = "";
 			int a;//계산할때 임시로 피연산자를 저장한다.
 			for (int i = 0; i < vec.size(); i++) {
@@ -246,30 +245,28 @@ public:
 					cstk.push(stoi(s));
 					//string을 int로 변환 후 스택에 넣기
 					s = "";
-					//cout << endl << "stacksize: " << cstk.size() << "  stacktop: " << cstk.top();
 				}
 				else {
 					if (s != "") {
 						cstk.push(stoi(s));
 						s = "";
-					}try {
+					}
 
-						throw vec[i];
+
+						if (cstk.size() <2){ cout << "연산자가 연속으로 들어있습니다." << endl; clearcalc(); }
 						switch (vec[i]) {//주어진 연산자에 따라 스택의 탑부터 1,2번째에 있는 정수끼리 연산한다 
 						case '+': a = cstk.top(); cstk.pop(); a += cstk.top(); cstk.pop(); cstk.push(a); break;
 						case '-': a = cstk.top(); cstk.pop(); a = cstk.top() - a; cstk.pop(); cstk.push(a); break;
 						case '*': a = cstk.top(); cstk.pop(); a *= cstk.top(); cstk.pop(); cstk.push(a); break;
 						case '/': a = cstk.top(); cstk.pop(); a = cstk.top() / a; cstk.pop(); cstk.push(a); break;
 						}
-					}
-					catch (char c) { cout << "연산자가 연속으로 들어있습니다. 연산자: " << c << endl; clearcalc(); }
+
+
 				}
 			}
 			a = cstk.top();
 			cstk.pop();
-			throw 100;
 			return a;//계산된 값을 int로 반환한다.
-		}catch (int c) { cout << "스택에 오류가 생겼습니다." << endl; clearcalc(); }
 	}
 };
 class Control:Calculator {//MVC의 control
@@ -284,9 +281,9 @@ public:
 	}
 
 	void start() {//입력 받은 후 계산기를 작동시키는 함수
-		vector<char> povec = converter.convert(((Calcmodel*)model)->line);
+		vector<char> povec = converter.convert(((Calcmodel*)model)->line);//다운캐스팅으로 함수 접근
 		view->viewpostfix(povec);
-		result = ((Calcmodel*)model)->Calc(povec);
+		result = ((Calcmodel*)model)->Calc(povec);// 일시적 다운캐스팅으로 함수 접근
 		view->viewresult(result);
 		povec.clear();
 		return;
@@ -308,7 +305,7 @@ int main() {
 	control->start();
 	while (model->line != "ac") {//ac입력하면 종료
 		getline(cin, str);
-		((Calcmodel*)model)->get_inputline(str);
+		((Calcmodel*)model)->get_inputline(str);//다운캐스팅을 통한 함수 접근
 		control->start();
 	}
 }
